@@ -1,7 +1,7 @@
-package com.example.ecommerce.dao;
+package com.example.ecommerce.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +9,5 @@ import com.example.ecommerce.model.Producto;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer>{
-    List<Producto> findBynombreContaining(String nombre);
+    Page<Producto> findBynombreContaining(Pageable pageable, String nombre);
 }

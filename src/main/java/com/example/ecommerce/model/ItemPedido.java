@@ -1,16 +1,43 @@
 package com.example.ecommerce.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="items_pedido")
 public class ItemPedido {
-    private Producto item;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
+    private int id;
+
+    @OneToOne
+    @JoinColumn(name="producto_id")
+    private Producto producto;
+    
+    @Column(name="cantidad")
     private int cantidad;
-    private double preciofinal;
 
-    public ItemPedido(Producto item, int cantidad){
-        this.item = item;
-        this.cantidad = cantidad;
-    }
+    @Column(name="precio")
+    private double precio;
 
-    double getItemPrecioFinal(){
-        preciofinal = item.getPrecio() * cantidad;
-        return preciofinal;
-    }
+    @ManyToOne
+    @JoinColumn(name="pedido_id")
+    private Pedido pedido;
 }
