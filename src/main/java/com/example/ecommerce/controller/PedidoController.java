@@ -1,13 +1,19 @@
 package com.example.ecommerce.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ecommerce.dto.PedidoCreateDto;
+import com.example.ecommerce.dto.PedidoDto;
 import com.example.ecommerce.model.Pedido;
 import com.example.ecommerce.service.PedidoService;
+import com.example.ecommerce.util.PedidoResponse;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,17 +29,19 @@ public class PedidoController {
     }
 
     @GetMapping
-    public List<Pedido> obtenerPedidos(){
-        return service.listarPedidos();
+    public ResponseEntity<PedidoResponse> obtenerPedidos(
+        @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+        @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
+        return new ResponseEntity<>(service.listarPedidos(pageNumber, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public Pedido obtenerPorID(@PathVariable int id){
-        return service.obtenerPorID(id);
+    public ResponseEntity<PedidoDto> obtenerPorID(@PathVariable int id){
+        return ResponseEntity.ok(service.obtenerPorID(id));
     }
 
-//    @PostMapping(("/nuevo"))
-//    public Pedido crearPedido(@RequestBody Pedido pedido){
-        
-//    }
+    @PostMapping("/nuevo")
+    public ResponseEntity<PedidoDto> crearPedido(@RequestBody PedidoCreateDto pedido){
+        return new ResponseEntity<>(service.guardar(pedido), HttpStatus.CREATED);
+    }
 }

@@ -2,6 +2,7 @@ package com.example.ecommerce.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
@@ -19,9 +20,9 @@ public interface ProductoMapper {
     
     Producto toEntity(ProductoDto productoDto);
 
+    @Mapping(target = "id", ignore = true)
     Producto toEntityFromCreate(ProductoCreateDto dto);
     
-    //@Mapping(target = "id", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void actualizarProductoEntityDesdeDto(ProductoUpdateDto productoDto, @MappingTarget Producto producto);
 }
