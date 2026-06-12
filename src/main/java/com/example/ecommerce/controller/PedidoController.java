@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ecommerce.dto.PedidoCreateDto;
 import com.example.ecommerce.dto.PedidoDto;
-import com.example.ecommerce.model.Pedido;
 import com.example.ecommerce.service.PedidoService;
 import com.example.ecommerce.util.PedidoResponse;
 
-import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
