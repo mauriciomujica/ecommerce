@@ -1,6 +1,5 @@
 package com.example.ecommerce.model;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name="pedidos")
 public class Pedido {
@@ -28,7 +29,7 @@ public class Pedido {
     private int id;
 
     @OneToMany(mappedBy = "pedido")
-    private Set<ItemPedido> itemsPedido = new HashSet<>();
+    private List<ItemPedido> itemsPedido;
     
     @Column(name="precio_final")
     private double precioFinalPedido;
@@ -36,10 +37,6 @@ public class Pedido {
 
     public void agregar_item(ItemPedido item){
         if (item != null){
-            if (itemsPedido == null){
-                itemsPedido = new HashSet<>();
-            }
-
             itemsPedido.add(item);
             item.setPedido(this);
         }

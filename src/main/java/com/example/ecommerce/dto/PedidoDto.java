@@ -1,9 +1,6 @@
 package com.example.ecommerce.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.example.ecommerce.model.ItemPedido;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +16,7 @@ import lombok.Setter;
 public class PedidoDto {
     private int id;
 
-    @Builder.Default
-    private Set<ItemPedido> itemsPedido = new HashSet<>();
-    
+    private List<ItemPedidoDto> itemsPedido;
+
     private double precioFinalPedido;
 }

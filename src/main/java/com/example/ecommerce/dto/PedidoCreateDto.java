@@ -1,7 +1,6 @@
 package com.example.ecommerce.dto;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +15,5 @@ import lombok.Setter;
 @Builder
 public class PedidoCreateDto {
 
-    @Builder.Default
-    private Set<ItemPedidoDto> itemsPedido = new HashSet<>();
+    private List<ItemPedidoDto> itemsPedido;
 }

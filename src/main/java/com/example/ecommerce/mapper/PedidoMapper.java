@@ -8,7 +8,7 @@ import com.example.ecommerce.dto.PedidoCreateDto;
 import com.example.ecommerce.dto.PedidoDto;
 import com.example.ecommerce.model.Pedido;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = ItemPedidoMapper.class)
 public interface PedidoMapper {
     PedidoMapper INSTANCE = Mappers.getMapper(PedidoMapper.class);
 

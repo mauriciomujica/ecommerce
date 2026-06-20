@@ -1,5 +1,6 @@
 package com.example.ecommerce.dto;
 
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Embeddable
 public class ItemPedidoDto {
     private int id;
     private int cantidad;
