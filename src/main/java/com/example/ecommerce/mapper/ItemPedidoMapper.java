@@ -1,5 +1,7 @@
 package com.example.ecommerce.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -18,4 +20,6 @@ public interface ItemPedidoMapper {
     @Mapping(target = "pedido", ignore = true)
     @Mapping(target = "producto", ignore = true)
     ItemPedido toEntity(ItemPedidoDto itemPedidoDto);
+
+    List<ItemPedido> map(List<ItemPedidoDto> itemsPedido);
 }
