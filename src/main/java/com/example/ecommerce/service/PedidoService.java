@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import com.example.ecommerce.dto.ItemPedidoDto;
 import com.example.ecommerce.dto.PedidoCreateDto;
 import com.example.ecommerce.dto.PedidoDto;
+import com.example.ecommerce.exception.CantidadInvalidaException;
 import com.example.ecommerce.exception.PedidoNoEncontradoException;
 import com.example.ecommerce.exception.ProductoNoEncontradoException;
+import com.example.ecommerce.exception.StockInsuficienteException;
 import com.example.ecommerce.mapper.PedidoMapper;
 import com.example.ecommerce.model.ItemPedido;
 import com.example.ecommerce.model.Pedido;
@@ -41,6 +43,16 @@ public class PedidoService {
         for (ItemPedidoDto itemDto : p.getItemsPedido()) {
             Producto producto = productoRepo.findById(itemDto.getId())
                 .orElseThrow(() -> new ProductoNoEncontradoException("Producto no encontrado"));
+
+            if (producto.getStock() < itemDto.getCantidad()){
+                throw new StockInsuficienteException("El stock del producto es insuficiente");
+            }
+
+            if (itemDto.getCantidad() <= 0){
+                throw new CantidadInvalidaException("La cantidad del producto es inválida, tiene que ser un número mayor a 0");
+            }
+
+            producto.setStock(producto.getStock() - itemDto.getCantidad());
             
             ItemPedido item = ItemPedido.builder()
                 .producto(producto)
@@ -74,5 +86,10 @@ public class PedidoService {
     public PedidoDto obtenerPorID(int id){
         Pedido pedido = pedidoRepo.findById(id).orElseThrow(()-> new PedidoNoEncontradoException("No se encontró un pedido con la ID: " + id));
         return mapper.toDto(pedido);
+    }
+
+    public void eliminarPedido(int id){
+        Pedido pedido = pedidoRepo.findById(id).orElseThrow(()-> new PedidoNoEncontradoException("No se encontró un pedido con la ID: " + id));
+        pedidoRepo.delete(pedido);
     }
 }

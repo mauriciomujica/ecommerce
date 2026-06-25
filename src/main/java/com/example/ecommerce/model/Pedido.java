@@ -29,7 +29,7 @@ public class Pedido {
     @Column(name="id")
     private int id;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedido> itemsPedido;
     
     @Column(name="precio_final")

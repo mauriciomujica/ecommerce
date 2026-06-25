@@ -15,7 +15,7 @@ public interface ItemPedidoMapper {
 
     ItemPedidoDto toDto(ItemPedido itemPedido);
 
-    //@Mapping(source = "id", target = "producto")
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "precio", ignore = true)
     @Mapping(target = "pedido", ignore = true)
     @Mapping(target = "producto", ignore = true)
