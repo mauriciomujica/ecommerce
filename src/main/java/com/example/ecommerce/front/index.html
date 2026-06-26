@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="#" onclick="showSection('productos')">Productos</a>
+        <a href="#" onclick="showSection('pedidos')">Pedidos</a>
+    </nav>
+
+    <main>
+        <section id="home" class="active">
+        </section>
+
+        <section id="productos">
+            <h2>Productos</h2>
+            <button onclick="showForm('producto')">Crear Producto</button>
+            <table id="productos-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Stock</th>
+                        <th>Precio</th>
+                        <th>Categoría</th>
+                        <th>Subcategoría</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="producto-form-container" class="hidden">
+                <form id="producto-form">
+                    <input type="hidden" id="producto-id">
+                    <input type="text" id="producto-nombre" placeholder="Nombre" required>
+                    <input type="number" id="producto-stock" placeholder="Stock" required>
+                    <input type="number" step="0.01" id="producto-precio" placeholder="Precio" required>
+                    <select id="producto-categoria" required></select>
+                    <select id="producto-subcategoria" required></select>
+                    <button type="submit">Guardar</button>
+                    <button type="button" onclick="hideForm('producto')">Cancelar</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="pedidos">
+            <h2>Pedidos</h2>
+            <button onclick="showForm('pedido')">Crear Pedido</button>
+            <table id="pedidos-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Items</th>
+                        <th>Precio Final</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="pedido-form-container" class="hidden">
+                <form id="pedido-form">
+                    <div id="pedido-items"></div>
+                    <button type="button" onclick="addItem()">Agregar Item</button>
+                    <button type="submit">Guardar</button>
+                    <button type="button" onclick="hideForm('pedido')">Cancelar</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="script/app.js"></script>
+</body>
+</html>
