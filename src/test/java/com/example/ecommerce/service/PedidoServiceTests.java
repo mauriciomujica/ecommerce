@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.example.ecommerce.dto.ItemPedidoDto;
+import com.example.ecommerce.dto.ItemPedidoResponseDto;
 import com.example.ecommerce.dto.PedidoCreateDto;
 import com.example.ecommerce.dto.PedidoDto;
 import com.example.ecommerce.mapper.PedidoMapper;
@@ -58,17 +59,28 @@ public class PedidoServiceTests {
         items.add(item1);
         items.add(item2);
 
+        List<ItemPedidoResponseDto> items2 = new ArrayList<>();
+
+        ItemPedidoResponseDto item3 = ItemPedidoResponseDto.builder()
+        .id(1).cantidad(5).build();
+
+        ItemPedidoResponseDto item4 = ItemPedidoResponseDto.builder()
+        .id(3).cantidad(3).build();
+
+        items2.add(item3);
+        items2.add(item4);
+
         create_dto = PedidoCreateDto.builder().itemsPedido(items).build();
 
-        pedido_dto = PedidoDto.builder().id(1).itemsPedido(items).build();
+        pedido_dto = PedidoDto.builder().id(1).itemsPedido(items2).build();
 
         List<ItemPedido> itemsEnt = new ArrayList<>();
 
-        ItemPedido item3 = ItemPedido.builder().id(1).cantidad(5).build();
-        ItemPedido item4 = ItemPedido.builder().id(3).cantidad(3).build();
+        ItemPedido item5 = ItemPedido.builder().id(1).cantidad(5).build();
+        ItemPedido item6 = ItemPedido.builder().id(3).cantidad(3).build();
 
-        itemsEnt.add(item3);
-        itemsEnt.add(item4);
+        itemsEnt.add(item5);
+        itemsEnt.add(item6);
 
         pedido = Pedido.builder().id(1).itemsPedido(itemsEnt).build();
     }

@@ -1,7 +1,6 @@
 package com.example.ecommerce.dto;
 
-import java.util.List;
-
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PedidoDto {
+@Embeddable
+public class ItemPedidoResponseDto {
     private int id;
-
-    private List<ItemPedidoResponseDto> itemsPedido;
-
-    private double precioFinalPedido;
+    private int cantidad;
+    private double precio;
+    private ProductoDto producto;  // Full product details
 }

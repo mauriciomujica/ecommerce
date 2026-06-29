@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.example.ecommerce.dto.ItemPedidoDto;
+import com.example.ecommerce.dto.ItemPedidoResponseDto;
 import com.example.ecommerce.dto.PedidoCreateDto;
 import com.example.ecommerce.dto.PedidoDto;
 import com.example.ecommerce.service.PedidoService;
@@ -49,18 +50,29 @@ public class PedidoControllerTests {
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         objectMapper = new ObjectMapper();
 
-        List<ItemPedidoDto> items = new ArrayList<>();
+        List<ItemPedidoResponseDto> items = new ArrayList<>();
 
-        ItemPedidoDto item1 = ItemPedidoDto.builder()
+        ItemPedidoResponseDto item1 = ItemPedidoResponseDto.builder()
         .id(1).cantidad(5).build();
 
-        ItemPedidoDto item2 = ItemPedidoDto.builder()
+        ItemPedidoResponseDto item2 = ItemPedidoResponseDto.builder()
         .id(3).cantidad(3).build();
 
         items.add(item1);
         items.add(item2);
 
-        create_dto = PedidoCreateDto.builder().itemsPedido(items).build();
+        List<ItemPedidoDto> items2 = new ArrayList<>();
+
+        ItemPedidoDto item3 = ItemPedidoDto.builder()
+        .id(1).cantidad(5).build();
+
+        ItemPedidoDto item4 = ItemPedidoDto.builder()
+        .id(3).cantidad(3).build();
+
+        items2.add(item3);
+        items2.add(item4);
+
+        create_dto = PedidoCreateDto.builder().itemsPedido(items2).build();
 
         pedido_dto = PedidoDto.builder().id(1).itemsPedido(items).build();
     }
