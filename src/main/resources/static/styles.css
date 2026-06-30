@@ -43,8 +43,73 @@ table th {
     color: white;
 }
 
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-header input {
+    padding: 5px;
+    font-size: 14px;
+}
+
+.sort-controls {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-controls label {
+    font-weight: bold;
+}
+
+.items-detail {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.items-detail th, .items-detail td {
+    border: 1px solid #ccc;
+    padding: 4px;
+    background: #f9f9f9;
+}
+
+.items-detail th {
+    background: #eee;
+    font-size: 0.85em;
+}
+
 .hidden {
     display: none;
+}
+
+#notification {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#notification.error {
+    background: #dc3545;
+}
+
+#notification.success {
+    background: #28a745;
 }
 
 form {
@@ -59,4 +124,19 @@ form input, form select {
 form button {
     margin: 5px;
     padding: 5px 10px;
+}
+
+.item-row {
+    margin: 5px 0;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.item-row button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
 }

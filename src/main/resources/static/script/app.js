@@ -1,4 +1,6 @@
 const apiBaseUrl = 'http://localhost:8080';
+let allProductos = [];
+let allPedidos = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     loadCategorias();
@@ -8,10 +10,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pedido-form').addEventListener('submit', savePedido);
 });
 
+function showNotification(message, isError = false) {
+    const notif = document.getElementById('notification');
+    notif.textContent = message;
+    notif.className = isError ? 'error' : 'success';
+    notif.classList.remove('hidden');
+    setTimeout(() => notif.classList.add('hidden'), 5000);
+}
+
 function showSection(section) {
     document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
     document.getElementById('home').classList.remove('active');
-    if (section) document.getElementById(section).classList.add('active');
+    if (section) {
+        document.getElementById(section).classList.add('active');
+        if (section === 'productos') {
+            loadProductos();
+        } else if (section === 'pedidos') {
+            loadPedidos();
+        }
+    }
 }
 
 function showForm(type) {
@@ -56,15 +73,20 @@ async function loadCategorias() {
 async function loadProductos() {
     const response = await fetch(`${apiBaseUrl}/productos?pageNumber=0&pageSize=100`);
     const data = await response.json();
+    allProductos = data.content;
+    renderProductos(allProductos);
+}
+
+function renderProductos(productos) {
     const tbody = document.querySelector('#productos-table tbody');
     tbody.innerHTML = '';
-    data.content.forEach(p => {
+    productos.forEach(p => {
         tbody.innerHTML += `
             <tr>
                 <td>${p.id}</td>
                 <td>${p.nombre}</td>
                 <td>${p.stock}</td>
-                <td>${p.precio}</td>
+                <td>$${p.precio}</td>
                 <td>${p.categoria}</td>
                 <td>${p.subcategoria}</td>
                 <td>
@@ -76,23 +98,129 @@ async function loadProductos() {
     });
 }
 
+async function searchProductos() {
+    const searchTerm = document.getElementById('producto-search').value.trim();
+    if (searchTerm) {
+        const isId = /^\d+$/.test(searchTerm);
+        if (isId) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/productos/${searchTerm}`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    showNotification(errorText, true);
+                    renderProductos([]);
+                    return;
+                }
+                const p = await response.json();
+                renderProductos([p]);
+            } catch (e) {
+                renderProductos([]);
+            }
+        } else {
+            const response = await fetch(`${apiBaseUrl}/productos?pageNumber=0&pageSize=100&nombre=${encodeURIComponent(searchTerm)}`);
+            const data = await response.json();
+            renderProductos(data.content);
+        }
+    } else {
+        renderProductos(allProductos);
+    }
+}
+
+function sortProductos() {
+    const field = document.getElementById('producto-sort-field').value;
+    const order = document.getElementById('producto-sort-order').value;
+    const sorted = [...allProductos].sort((a, b) => {
+        let valA = a[field] || '';
+        let valB = b[field] || '';
+        if (['precio', 'stock', 'id'].includes(field)) {
+            valA = a[field] || 0;
+            valB = b[field] || 0;
+            return order === 'asc' ? valA - valB : valB - valA;
+        }
+        return order === 'asc' 
+            ? (valA > valB ? 1 : -1) 
+            : (valA < valB ? 1 : -1);
+    });
+    renderProductos(sorted);
+}
+
 async function loadPedidos() {
     const response = await fetch(`${apiBaseUrl}/pedidos?pageNumber=0&pageSize=100`);
     const data = await response.json();
+    allPedidos = data.content;
+    renderPedidos(allPedidos);
+}
+
+function renderPedidos(pedidos) {
     const tbody = document.querySelector('#pedidos-table tbody');
     tbody.innerHTML = '';
-    data.content.forEach(p => {
+    pedidos.forEach(p => {
         tbody.innerHTML += `
             <tr>
                 <td>${p.id}</td>
-                <td>${JSON.stringify(p.itemsPedido)}</td>
-                <td>${p.precioFinalPedido}</td>
+                <td>
+                    <table class="items-detail">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${p.itemsPedido.map(item => `
+                                <tr>
+                                    <td>${item.producto?.nombre || 'N/A'}</td>
+                                    <td>${item.cantidad}</td>
+                                    <td>$${item.precio}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </td>
+                <td>$${p.precioFinalPedido}</td>
                 <td>
                     <button onclick="deletePedido(${p.id})">Eliminar</button>
                 </td>
             </tr>
         `;
     });
+}
+
+async function searchPedidos() {
+    const searchId = document.getElementById('pedido-search').value;
+    if (searchId) {
+        try {
+            const response = await fetch(`${apiBaseUrl}/pedidos/${searchId}`);
+            if (!response.ok) {
+                const errorText = await response.text();
+                showNotification(errorText, true);
+                renderPedidos([]);
+                return;
+            }
+            const p = await response.json();
+            renderPedidos([p]);
+        } catch (e) {
+            renderPedidos([]);
+        }
+    } else {
+        renderPedidos(allPedidos);
+    }
+}
+
+function sortPedidos() {
+    const field = document.getElementById('pedido-sort-field').value;
+    const order = document.getElementById('pedido-sort-order').value;
+    const sorted = [...allPedidos].sort((a, b) => {
+        let valA = a[field] || 0;
+        let valB = b[field] || 0;
+        if (order === 'asc') {
+            return valA - valB;
+        } else {
+            return valB - valA;
+        }
+    });
+    renderPedidos(sorted);
 }
 
 async function saveProducto(e) {
@@ -109,11 +237,22 @@ async function saveProducto(e) {
     const url = id ? `${apiBaseUrl}/productos/${id}` : `${apiBaseUrl}/productos`;
     const method = id ? 'PATCH' : 'POST';
 
-    await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(producto)
-    });
+    try {
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(producto)
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            showNotification(errorText, true);
+            return;
+        }
+        showNotification(id ? 'Producto actualizado' : 'Producto creado');
+    } catch (err) {
+        showNotification('Error al guardar producto', true);
+        return;
+    }
 
     hideForm('producto');
     loadProductos();
@@ -163,13 +302,21 @@ function clearPedidoForm() {
 }
 
 function addItem() {
-    document.getElementById('pedido-items').innerHTML += `
-        <div class="item-row">
-            <input type="number" placeholder="ID Producto" class="item-id" required>
-            <input type="number" placeholder="Cantidad" class="item-cantidad" required>
-        </div>
+    const itemRow = document.createElement('div');
+    itemRow.className = 'item-row';
+    const removeBtn = pedidoItemCount > 0 ? '<button type="button" onclick="removeItem(this)">Eliminar</button>' : '';
+    itemRow.innerHTML = `
+        <input type="number" placeholder="ID Producto" class="item-id" required>
+        <input type="number" placeholder="Cantidad" class="item-cantidad" required>
+        ${removeBtn}
     `;
+    document.getElementById('pedido-items').appendChild(itemRow);
     pedidoItemCount++;
+}
+
+function removeItem(button) {
+    button.parentElement.remove();
+    pedidoItemCount--;
 }
 
 async function savePedido(e) {
@@ -182,11 +329,22 @@ async function savePedido(e) {
         });
     });
 
-    await fetch(`${apiBaseUrl}/pedidos/nuevo`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemsPedido: items })
-    });
+    try {
+        const response = await fetch(`${apiBaseUrl}/pedidos/nuevo`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ itemsPedido: items })
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            showNotification(errorText, true);
+            return;
+        }
+        showNotification('Pedido creado');
+    } catch (err) {
+        showNotification('Error al crear pedido', true);
+        return;
+    }
 
     hideForm('pedido');
     loadPedidos();

@@ -25,4 +25,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleCantidadInvalida(CantidadInvalidaException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+
+    @ExceptionHandler(NombreInvalidoException.class)
+    public ResponseEntity<String> handleNombreInvalido(NombreInvalidoException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

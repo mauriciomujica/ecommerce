@@ -9,6 +9,8 @@ import com.example.ecommerce.util.ProductoResponse;
 import com.example.ecommerce.dto.ProductoCreateDto;
 import com.example.ecommerce.dto.ProductoDto;
 import com.example.ecommerce.dto.ProductoUpdateDto;
+import com.example.ecommerce.exception.CantidadInvalidaException;
+import com.example.ecommerce.exception.NombreInvalidoException;
 import com.example.ecommerce.exception.ProductoNoEncontradoException;
 import com.example.ecommerce.mapper.ProductoMapper;
 
@@ -28,7 +30,22 @@ public class ProductoService {
     }
 
     public ProductoDto guardar(ProductoCreateDto p){
-        Producto productoAGuardar = repo.save(mapper.toEntityFromCreate(p));
+        Producto productoAGuardar = mapper.toEntityFromCreate(p);
+
+        if (productoAGuardar.getNombre() == null || productoAGuardar.getNombre().isBlank()){
+            throw new NombreInvalidoException("El nombre del producto no puede estar vacio");
+        }
+
+        if (productoAGuardar.getStock() <= 0){
+            throw new CantidadInvalidaException("El stock del producto es inválido, tiene que ser mayor a 0");
+        }
+
+        if (productoAGuardar.getPrecio() <= 0){
+            throw new CantidadInvalidaException("El precio del producto es inválido, tiene que ser mayor a 0");
+        }
+
+        repo.save(productoAGuardar);
+
         return mapper.toDto(productoAGuardar);
     }
 

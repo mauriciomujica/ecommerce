@@ -11,14 +11,35 @@
         <a href="#" onclick="showSection('productos')">Productos</a>
         <a href="#" onclick="showSection('pedidos')">Pedidos</a>
     </nav>
+    <div id="notification" class="hidden"></div>
 
     <main>
         <section id="home" class="active">
         </section>
 
         <section id="productos">
-            <h2>Productos</h2>
-            <button onclick="showForm('producto')">Crear Producto</button>
+            <div class="section-header">
+                <div>
+                    <h2>Productos</h2>
+                    <input type="text" id="producto-search" placeholder="Buscar por nombre o ID..." onkeydown="if(event.key==='Enter') searchProductos()">
+                    <button onclick="searchProductos()">Buscar</button>
+                </div>
+                <button onclick="showForm('producto')">Crear Producto</button>
+            </div>
+            <div class="sort-controls">
+                <label>Ordenar por:</label>
+                <select id="producto-sort-field" onchange="sortProductos()">
+                    <option value="id" selected>ID</option>
+                    <option value="precio">Precio</option>
+                    <option value="nombre">Nombre</option>
+                    <option value="categoria">Categoría</option>
+                    <option value="stock">Stock</option>
+                </select>
+                <select id="producto-sort-order" onchange="sortProductos()">
+                    <option value="asc">Ascendente</option>
+                    <option value="desc">Descendente</option>
+                </select>
+            </div>
             <table id="productos-table">
                 <thead>
                     <tr>
@@ -48,8 +69,25 @@
         </section>
 
         <section id="pedidos">
-            <h2>Pedidos</h2>
-            <button onclick="showForm('pedido')">Crear Pedido</button>
+            <div class="section-header">
+                <div>
+                    <h2>Pedidos</h2>
+                    <input type="number" id="pedido-search" placeholder="Buscar por ID..." onkeydown="if(event.key==='Enter') searchPedidos()">
+                    <button onclick="searchPedidos()">Buscar</button>
+                </div>
+                <button onclick="showForm('pedido')">Crear Pedido</button>
+            </div>
+            <div class="sort-controls">
+                <label>Ordenar por:</label>
+                <select id="pedido-sort-field" onchange="sortPedidos()">
+                    <option value="id" selected>ID</option>
+                    <option value="precioFinalPedido">Precio Final</option>
+                </select>
+                <select id="pedido-sort-order" onchange="sortPedidos()">
+                    <option value="asc">Ascendente</option>
+                    <option value="desc">Descendente</option>
+                </select>
+            </div>
             <table id="pedidos-table">
                 <thead>
                     <tr>
